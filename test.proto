@@ -1,0 +1,20 @@
+
+syntax = "proto3";
+
+
+message query {
+   int32  rfw_id= 1;
+   string benchmark_type = 2;
+   string workload_metric = 3;
+   int32 batch_unit =4;
+   int32 batch_id = 5;
+   int32 batch_size = 6;
+
+}
+
+
+message out {
+ int32 rfw_id= 1;
+ int32 last_batch_id = 2;
+ int32 samples_requested = 3;
+}
