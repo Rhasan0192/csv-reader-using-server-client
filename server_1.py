@@ -17,22 +17,31 @@ def query():
     batch_size=int(batch_size)
     batch_id=int(batch_id)
     c=len(data[workload_metric])
-    samples_requested=batch_unit*batch_size
+    mul=abs(batch_id-batch_size)
+    samples_requested=(mul+1)*batch_unit
     
- 
-    for i in range(0,batch_size):
-        data1=pd.read_csv("Workload_Data/"+benchmark_type+".csv",nrows=batch_unit)
+    dat=[]
+    for i in range(0,(mul+1)):
+        data1=pd.read_csv("Workload_Data/"+benchmark_type+".csv")
         data2=pd.DataFrame(data1[workload_metric])
-        data2=data2.to_json()
-        data2=json.dumps(data2)
-    
+        dam=data2.iloc[i*batch_unit:(i+1)*batch_unit]
+        dam=dam.to_json()
+        dat.append(dam)
+        i+=1
         batch_id+=1
+        print("batch_id:",batch_id,)
+       # print("i:",i)
+    #dat=dat.to_json()
+    dat_json=json.dumps(dat)
+    #batch_id=batch_id-1
+    print(dat_json)
     last_batch_id=batch_id-1
 
     return '''<h1>rfw_id: {}</h1>
               <h1>last_batch_id: {}</h1>
-              <h1>samples_requested: {}
-              '''.format(rfw_id, last_batch_id, samples_requested)
+              <h1>samples_requested: {}</h1>
+              <table>{}
+              '''.format(rfw_id, last_batch_id, samples_requested,dat_json)
 
 
 
