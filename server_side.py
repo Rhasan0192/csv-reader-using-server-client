@@ -9,6 +9,7 @@ import sys
 query=test_pb2.query()
 out=test_pb2.out()
 
+
 app = Flask(__name__) #create the Flask app
 
 @app.route('/ping')
@@ -19,6 +20,16 @@ def ping():
     query.batch_unit = int(request.args.get('batch_unit')) #if key doesn't exist, returns None
     query.batch_id = int(request.args['batch_id']) #if key doesn't exist, returns a 400, bad request error
     query.batch_size = int(request.args.get('batch_size'))
+
+    #for serialization
+    quotesFile = open("quotes.txt", "wb")
+    quotesFile.write(query.SerializeToString())
+
+    #for de-serialization
+    with open('quotes.txt', 'r') as infile:
+        for line in infile:
+            query.ParseFromString(line)
+    
    
     data=pd.read_csv("Workload_Data/"+query.benchmark_type+".csv")
    
@@ -34,7 +45,7 @@ def ping():
         i+=1
         query.batch_id+=1
         #print("batch_id:",query.batch_id,)
-       
+
     #print(dat)
     out.last_batch_id=query.batch_id-1
     print(dat)
