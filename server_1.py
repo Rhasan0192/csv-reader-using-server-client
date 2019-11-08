@@ -30,10 +30,15 @@ def query():
         i+=1
         batch_id+=1
         print("batch_id:",batch_id,)
-       # print("i:",i)
-    #dat=dat.to_json()
+       
     dat_json=json.dumps(dat)
-    #batch_id=batch_id-1
+    #for serialization    
+    with open('user.json','w') as file:
+        dat_json=json.dump(dat,file, sort_keys=True, indent=4)
+    #for deserialization
+    with open('user.json','r') as file:
+        dat_json=json.load(file)
+    
     print(dat_json)
     last_batch_id=batch_id-1
 
@@ -46,4 +51,4 @@ def query():
 
 
 if __name__ == '__main__':
-    app.run(debug=True) #run app in debug mode on port 5000
+    app.run(host='0.0.0.0'debug=True,port=80) #run app in debug mode on port 5000
